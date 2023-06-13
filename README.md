@@ -12,7 +12,7 @@ The following tools were utilized in the ChIP-seq pipeline:
 4.  Alignment ([`HISAT2`](http://daehwankimlab.github.io/hisat2/manual/))
 5.  Binary Index SAM File ([`Samtools`](http://quinlanlab.org/tutorials/samtools/samtools.html))
 6.  Peak Calling ([`MACS2 callpeak`](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html))
-7.  Call Differential Peaks ([`MACS2 bdgdiff`](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html))
+7.  Call Differential Peaks ([`MACS2 bdgdiff`](https://github.com/macs3-project/MACS/wiki/Call-differential-binding-events))
 8.  Annotate Peaks ([`Homer`](http://homer.ucsd.edu/homer/ngs/annotation.html))
 
 Refer to the documentation of each tool for more information on their usage and specific parameters.
