@@ -6,14 +6,14 @@ ChIP-seq (Chromatin Immunoprecipitation Sequencing) is a widely used  technique 
 
 ## Pipeline Summary
 The following tools were utilized in the ChIP-seq pipeline:
-1.  Download the FASTQ files from SRA ([`Fastq-dump`]([https://rnnh.github.io/bioinfo-notebook/docs/fastq-dump.html]))
-2.  Quality Control ([`FastQC`]([https://www.bioinformatics.babraham.ac.uk/projects/fastqc/]))
-3.  Trim Adaptors ([`TrimGalore`]([https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md]))
-4.  Alignment ([`HISAT2`]([http://daehwankimlab.github.io/hisat2/manual/]))
-5.  Binary Index SAM File ([`Samtools`]([http://quinlanlab.org/tutorials/samtools/samtools.html]))
-6.  Peak Calling ([`MACS2 callpeak`]([https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html]))
-7.  Call Differential Peaks ([`MACS2 bdgdiff`]([https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html]))
-8.  Annotate Peaks ([`Homer`]([http://homer.ucsd.edu/homer/ngs/annotation.html]))
+1.  Download the FASTQ files from SRA ([`Fastq-dump`](https://rnnh.github.io/bioinfo-notebook/docs/fastq-dump.html))
+2.  Quality Control ([`FastQC`](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/))
+3.  Trim Adaptors ([`TrimGalore`](https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md))
+4.  Alignment ([`HISAT2`](http://daehwankimlab.github.io/hisat2/manual/))
+5.  Binary Index SAM File ([`Samtools`](http://quinlanlab.org/tutorials/samtools/samtools.html))
+6.  Peak Calling ([`MACS2 callpeak`](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html))
+7.  Call Differential Peaks ([`MACS2 bdgdiff`](https://hbctraining.github.io/Intro-to-ChIPseq/lessons/05_peak_calling_macs.html))
+8.  Annotate Peaks ([`Homer`](http://homer.ucsd.edu/homer/ngs/annotation.html))
 
 Refer to the documentation of each tool for more information on their usage and specific parameters.
 
