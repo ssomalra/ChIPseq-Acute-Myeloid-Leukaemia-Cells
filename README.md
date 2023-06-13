@@ -18,7 +18,7 @@ The following tools were utilized in the ChIP-seq pipeline:
 Refer to the documentation of each tool for more information on their usage and specific parameters.
 
 ## Data Source
-The ChIP-seq data used in this project was downloaded from the NCBI (https://www.ncbi.nlm.nih.gov/bioproject/PRJNA727828). The dataset consists of ChIP-seq data collected from THP-1 cells, which are human leukemia cells. The following files were downloaded from NCBI:
+The ChIP-seq data used in this project was downloaded from [`NCBI`](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA727828). The dataset consists of ChIP-seq data collected from THP-1 cells, which are human leukemia cells. The following files were downloaded from NCBI:
 - Control Samples: SRR18643804 and SRR14458872
 - Treatment Samples: SRR14458865 and SRR14458869
 
