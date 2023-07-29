@@ -1,0 +1,75 @@
+# Set working directory:
+cd ChIP_seq/Acute_Myeloid_Leukaemia_Cells
+
+# Link to SRA: https://www.ncbi.nlm.nih.gov/Traces/study/?acc=SRP318762&o=acc_s%3Aa 
+
+# Fastq-dump (to get data from SRA):
+module load sra-toolkit/3.0.0
+fastq-dump SRR18643804  # Control 1
+fastq-dump SRR14458872  # Control 2
+fastq-dump SRR14458865  # Treatment 1
+fastq-dump SRR14458869  # Treatment 2
+
+# Quality Check
+module load fastqc/0.11.9
+fastqc Control_1.fastq
+fastqc Control_2.fastq
+fastqc Treatment_1.fastq 
+fastqc Treatment_2.fastq
+
+# Trim Adaptors
+pip install cutadapt
+module load trimgalore
+trim_galore --phred33 --fastqc Control_1.fastq
+trim_galore --phred33 --fastqc Control_2.fastq
+trim_galore --phred33 --fastqc Treatment_1.fastq
+trim_galore --phred33 --fastqc Treatment_2.fastq
+
+# Download human genome from ensembl: https://useast.ensembl.org/Homo_sapiens/Info/Index 
+wget https://ftp.ensembl.org/pub/release-108/fasta/homo_sapiens/dna/Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz
+gunzip Homo_sapiens.GRCh38.dna.primary_assembly.fa.gz 
+
+# Index genome
+module load hisat2
+hisat2-build Homo_sapiens.GRCh38.dna.alt.fa assembly/genome_108
+
+# Perform alignment
+hisat2 -x assembly/genome_108 -U Control_1_trimmed.fq -S Control_1_trimmed.sam --summary-file control1_alignment.txt
+hisat2 -x assembly/genome_108 -U Control_2_trimmed.fq -S Control_2_trimmed.sam --summary-file control2_alignment.txt
+hisat2 -x assembly/genome_108 -U Treatment_1_trimmed.fq -S Treatment_1_trimmed.sam --summary-file treatment1_alignment.txt
+hisat2 -x assembly/genome_108 -U Treatment_2_trimmed.fq -S Treatment_2_trimmed.sam --summary-file treatment2_alignment.txt
+
+# Binary index SAM file
+module load gcc/9.3.0
+module load samtools
+samtools view -S -b Control_1_trimmed.sam > Control_1_trimmed.bam
+samtools view -S -b Control_2_trimmed.sam > Control_2_trimmed.bam
+samtools view -S -b Treatment_1_trimmed.sam > Treatment_1_trimmed.bam
+samtools view -S -b Treatment_2_trimmed.sam > Treatment_2_trimmed.bam
+
+# Sort BAM file
+samtools sort Control_1_trimmed.bam -o Control_1_trimmed.sorted.bam
+samtools sort Control_2_trimmed.bam -o Control_2_trimmed.sorted.bam
+samtools sort Treatment_1_trimmed.bam -o Treatment_1_trimmed.sorted.bam
+samtools sort Treatment_2_trimmed.bam -o Treatment_2_trimmed.sorted.bam
+
+# Index BAM file
+samtools index -b Control_1_trimmed.sorted.bam Control_1_trimmed.sorted.bam.bai
+samtools index -b Control_2_trimmed.sorted.bam Control_2_trimmed.sorted.bam.bai
+samtools index -b Treatment_1_trimmed.sorted.bam Treatment_1_trimmed.sorted.bam.bai
+samtools index -b Treatment_2_trimmed.sorted.bam Treatment_2_trimmed.sorted.bam.bai
+
+# Peak Calling
+module load macs/intel/python3.8.2/2.2.7.1
+macs2 callpeak -B -t Treatment_1_trimmed.sorted.bam -c Control_1_trimmed.sorted.bam -f BAM -n Treated_Control_1 --nomodel --outdir macs2_new
+macs2 callpeak -B -t Treatment_2_trimmed.sorted.bam -c Control_2_trimmed.sorted.bam -f BAM -n Treated_Control_2 --nomodel --outdir macs2_new
+
+# Differential Peaks
+mkdir differential_peaks
+cd differential_peaks
+macs2 bdgdiff --t1 Acute_Myeloid_Leukaemia_Cells/macs2_new/Treated_Control_1_treat_pileup.bdg --c1 Acute_Myeloid_Leukaemia_Cells/macs2_new/Treated_Control_1_control_lambda.bdg --t2 Acute_Myeloid_Leukaemia_Cells/macs2_new/Treated_Control_2_treat_pileup.bdg --c2 Acute_Myeloid_Leukaemia_Cells/macs2_new/Treated_Control_2_control_lambda.bdg --o-prefix diff_c1_vs_c2
+
+# Annotate Peaks
+# Before running ~ modify bed file so that the first column (chromosome name) begins with ‘chr’
+module load homer/4.11.1
+annotatePeaks.pl differential_peaks/diff_c1_vs_c2_c3.0_cond2.bed hg38 -annStats annotation_stats.txt > homer_ann.txt
